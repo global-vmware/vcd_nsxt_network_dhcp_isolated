@@ -63,7 +63,7 @@ module "vcd_nsxt_network_dhcp" {
       gateway             = "172.16.21.1"
       prefix_length       = 24
       dns_suffix          = "mydomain.com"
-      listener_ip_address = null
+      listener_ip_address = "172.16.21.10"
       pool_ranges         = [
         {
           start_address = "172.16.21.101"
