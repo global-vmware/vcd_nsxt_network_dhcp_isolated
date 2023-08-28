@@ -63,7 +63,11 @@ module "vcd_nsxt_network_dhcp" {
       gateway             = "172.16.21.1"
       prefix_length       = 24
       dns_suffix          = "mydomain.com"
+<<<<<<< HEAD
       listener_ip_address = null
+=======
+      listener_ip_address = "172.16.21.10"
+>>>>>>> 4360329dfcd3ef4394b0253b0cfc585141372531
       pool_ranges         = [
         {
           start_address = "172.16.21.101"
@@ -80,4 +84,8 @@ module "vcd_nsxt_network_dhcp" {
 
 ## Authors
 
+<<<<<<< HEAD
 This module is maintained by the [Global VMware Cloud Automation Services Team](https://github.com/global-vmware).
+=======
+This module is maintained by the [Global VMware Cloud Automation Services Team](https://github.com/global-vmware).
+>>>>>>> 4360329dfcd3ef4394b0253b0cfc585141372531
