@@ -1,12 +1,12 @@
-# VCD NSX-T Isolated DHCP Terraform Module
+# VCD NSX-T Isolated Network DHCP Terraform Module
 
-This Terraform module deploys NSX-T Isolated DHCP Pools into an existing VMware Cloud Director (VCD) environment. This module can be used to provision new NSX-T Isolated DHCP Pools into [Rackspace Technology SDDC Flex](https://www.rackspace.com/cloud/private/software-defined-data-center-flex) VCD Data Center Regions.
+This Terraform module deploys NSX-T Isolated Network DHCP Pools into an existing VMware Cloud Director (VCD) environment. This module can be used to provision new NSX-T Isolated Network DHCP Pools into [Rackspace Technology SDDC Flex](https://www.rackspace.com/cloud/private/software-defined-data-center-flex) VCD Data Center Regions.
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.2 |
+| terraform | >= 1.5.7 |
 | vcd | >= 3.8 |
 
 ## Resources
@@ -25,7 +25,7 @@ This Terraform module deploys NSX-T Isolated DHCP Pools into an existing VMware 
 | vdc_org_name | The name of the Data Center Group Organization in VCD | string | - | yes |
 | vdc_edge_name | Name of the Data Center Group Edge Gateway | string | - | yes |
 | vdc_group_name | The name of the Data Center Group in VCD | string | - | yes |
-| segments | Map of network segments to configure DHCP on | map(object({ gateway = string, prefix_length = number, dns_suffix = string, listener_ip_address = string, pool_ranges = list(map(string)), dns_servers = list(string), dhcp_mode = string, lease_time = number })) | {} | yes |
+| segments | Map of network segments to configure DHCP on | map(object({ listener_ip_address = string, pool_ranges = list(map(string)), dns_servers = list(string), lease_time = number })) | {} | yes |
 
 ## Outputs
 
@@ -35,45 +35,24 @@ This Terraform module deploys NSX-T Isolated DHCP Pools into an existing VMware 
 
 ## Example Usage
 
+### Isolated Network Specific Deployment (NETWORK Mode)
 ```terraform
 module "vcd_nsxt_network_dhcp" {
-  source = "github.com/global-vmware/vcd_nsxt_network_dhcp_isolated.git?ref=v1.0.1"
-
+  source = "github.com/global-vmware/vcd_nsxt_network_dhcp_isolated.git?ref=v2.1.0"
+  
   vdc_org_name   = "<VDC-ORG-NAME>"
   vdc_group_name = "<VDC-GRP-NAME>"
   vdc_edge_name  = "<VDC-EDGE-NAME>"
 
   segments = {
-    "US1-Isolated-Segment-01" = {
-      gateway             = "172.16.20.1"
-      prefix_length       = 24
-      dns_suffix          = "mydomain.com"
-      listener_ip_address = "172.16.20.10"
-      pool_ranges         = [
-        {
-          start_address   = "172.16.20.101"
-          end_address     = "172.16.20.200"
-        }
-      ]
-      dns_servers         = ["192.168.255.228"]
-      dhcp_mode           = "NETWORK"
-      lease_time          = 2592000
-    },    
-    "US1-Isolated-Segment-02" = {
-      gateway             = "172.16.21.1"
-      prefix_length       = 24
-      dns_suffix          = "mydomain.com"
-      listener_ip_address = "192.16.20.10"
-      listener_ip_address = "172.16.21.10"
-      pool_ranges         = [
-        {
-          start_address = "172.16.21.101"
-          end_address   = "172.16.21.200"
-        }
-      ]
-      dns_servers         = ["192.168.255.228"]
-      dhcp_mode           = "NETWORK"
-      lease_time          = 2592000
+    "Isolated-Web-Network" = {
+      listener_ip_address = "10.1.0.10"
+      dns_servers         = ["10.1.0.10", "10.1.0.11"]
+      lease_time          = 604800
+      pool_ranges = [{
+        start_address = "10.1.0.100"
+        end_address   = "10.1.0.200"
+      }]
     }
   }
 }
